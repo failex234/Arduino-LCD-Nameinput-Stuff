@@ -47,7 +47,7 @@ void loop() {
       if (currindex == 27) currindex = 0;
       delay(120);
     }
-
+    //Go to previous character and return back to Space if we're at 0
     if (digitalRead(prevPin) == HIGH && isEnabled) {
       if (currindex == 0) {
           currindex = 26;
