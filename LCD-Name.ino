@@ -2,7 +2,7 @@
 
 /*
  * If you don't want to change anything you need to wire up your LCD like in the LCD starter example.
- * You may also connect 2 pushbuttons and connect them to pin 6 and 9. Or you choose pins yourself.
+ * You may also connect 3 pushbuttons and connect them to pin 6, 7 and 9. Or you choose pins yourself.
  * 
  * Inputs characters of the alphabet that you can cycle through to the screen and prints them
  * on the screen if you hit the button thats connected to the confirmPin (In my case it's pin 9)
@@ -12,6 +12,7 @@
  */
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
+const int prevPin = 7;
 const int nextPin = 6;
 const int confirmPin = 9;
 
@@ -21,15 +22,17 @@ int currindex = 0;
 int rows = 1;
 char alphabet[] = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z', ' '};
 char row1[16];
-char row2[16];
+char row2[17];
 
 boolean isEnabled = true;
 void setup() {
   lcd.begin(16, 2);
 
-  //Set both Pins as Input
+  //Set all 3 Pins as Input
+  pinMode(prevPin, INPUT);
   pinMode(nextPin, INPUT);
   pinMode(confirmPin, INPUT);
+
 }
 
 void loop() {
@@ -37,10 +40,20 @@ void loop() {
   if (millis() > 5000) {
     if (currrow2chars == 16) isEnabled = false;
     if (currchars == 16) rows = 2;
+    
     //Go to next character and return back to A if we're at 27
     if (digitalRead(nextPin) == HIGH && isEnabled) {
       currindex++;
       if (currindex == 27) currindex = 0;
+      delay(120);
+    }
+
+    if (digitalRead(prevPin) == HIGH && isEnabled) {
+      if (currindex == 0) {
+          currindex = 26;
+      } else {
+          currindex--;
+      }
       delay(120);
     }
 
